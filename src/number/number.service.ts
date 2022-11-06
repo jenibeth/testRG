@@ -10,7 +10,7 @@ export class NumberService {
             producto=producto.concat(result.toString());
 
         }
-        return producto.substring(0, 8);
-      // return result;
+        return producto.substring(0, 9);
+      
     }
 }

@@ -1,34 +1,37 @@
 import { Injectable } from '@nestjs/common';
-//import { BirthdayDto } from '../birthday-dto/birthday-dto';
-import  Moment from 'moment';
-
+const moment= require ('moment');
 
 @Injectable()
 export class BirthdayService {
-   // constructor(private birthdate: BirthdayDto){}
+   async calculateDays(birthdate: Date) {
 
-    async calculateDays(birthdate: Date) {
-       const actualDay = Moment().format('YYYY-MM-DD');
+        const actualDay = moment().format('YYYY-MM-DD');
+
+        let birthday=moment(birthdate).format('YYYY-MM-DD');
        
-        const isFormatValid = Moment(birthdate, 'YYYY-MM-DD', true).isValid();
-        //const isFormatValid = Moment(birthdate, 'YYYY-MM-DD').isValid();
-        console.log("Formato esperado YYYY-MM-DD, Valor ingresado: 2023-01-04, Resultado: "+ isFormatValid);
+   
+        let monthBirth=moment(birthday).format('MM');
+        let dayBirth=moment(birthday).format('DD');
+ 
+        let yearNow=moment(actualDay).format('YYYY');
+        let monthNow=moment(actualDay).format('MM');
+        let dayNow=moment(actualDay).format('DD');
 
-        //EJEMPLO DE FORMATO INVALIDO
-        /*
-        const isFormatValid = moment("2023/01/04", 'YYYY-MM-DD', true).isValid();
-        console.log("Formato esperado YYYY-MM-DD, Valor ingresado: 2023/01/04, Resultado: "+ isFormatValid);
-        */
+        let year=yearNow;
+        let nextBirthday="";
+        //validar sin se compara con el 2023 o 2022
+        if (monthBirth<monthNow){
+            year= moment(yearNow).add(1, 'years').format('YYYY'); 
+          
+         }else if(monthBirth==monthNow){
+             if(dayBirth<=dayNow){
+                 year= moment(yearNow).add(1, 'years').format('YYYY');                 
+             }     
+         }
 
-        const daysLeftForBirthday = Moment(birthdate).diff(Moment(), "days");
-        const hoursLeftForBirthday = Moment(birthdate).diff(Moment(), "hours");
-        
-        if(daysLeftForBirthday < 0){
-            console.log("Error, la fecha ingresada de cumpleaños debe ser mayor a la fecha actual");
-        }else{
-            console.log("Dias restantes para el cumpleaños: " + daysLeftForBirthday);
-            console.log("Horas restantes para el cumpleaños: " + hoursLeftForBirthday);
-        }
-        return daysLeftForBirthday +". "+ hoursLeftForBirthday;
+         nextBirthday=(`${year}-${monthBirth}-${dayBirth}`);
+         return  (moment(nextBirthday).diff(moment(), "days"))+1;  
+       
     }
 }
+
